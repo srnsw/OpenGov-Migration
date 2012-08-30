@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2012 1:21:11 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="au.gov.nsw.records.digitalarchive.opengov.data.Archivist" table="archivist" catalog="publications_nsw">
+        <id name="archivistId" type="java.lang.Integer">
+            <column name="archivist_id" />
+            <generator class="identity" />
+        </id>
+        <property name="archivistType" type="java.lang.Integer">
+            <column name="archivist_type" />
+        </property>
+        <property name="firstname" type="string">
+            <column name="firstname" length="45" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" length="45" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="45" />
+        </property>
+        <property name="employeeNumber" type="string">
+            <column name="employee_number" length="100" />
+        </property>
+        <property name="loginName" type="string">
+            <column name="login_name" length="45" />
+        </property>
+        <property name="loginPassword" type="string">
+            <column name="login_password" length="45" />
+        </property>
+        <property name="lastLogin" type="timestamp">
+            <column name="last_login" length="19" />
+        </property>
+        <property name="loginTimes" type="java.lang.Integer">
+            <column name="login_times" />
+        </property>
+        <set name="publications" table="publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="approved_by" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.Publication" />
+        </set>
+    </class>
+</hibernate-mapping>

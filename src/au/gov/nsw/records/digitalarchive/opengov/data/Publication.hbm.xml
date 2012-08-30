@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2012 1:21:11 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="au.gov.nsw.records.digitalarchive.opengov.data.Publication" table="publication" catalog="publications_nsw">
+        <id name="publicationId" type="java.lang.Integer">
+            <column name="publication_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="member" class="au.gov.nsw.records.digitalarchive.opengov.data.Member" fetch="select">
+            <column name="registered_by" />
+        </many-to-one>
+        <many-to-one name="archivist" class="au.gov.nsw.records.digitalarchive.opengov.data.Archivist" fetch="select">
+            <column name="approved_by" />
+        </many-to-one>
+        <property name="title" type="string">
+            <column name="title" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535" />
+        </property>
+        <property name="datePublished" type="string">
+            <column name="date_published" length="45" />
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="100" />
+        </property>
+        <property name="typeOther" type="string">
+            <column name="type_other" length="100" />
+        </property>
+        <property name="coverage" type="string">
+            <column name="coverage" length="65535" />
+        </property>
+        <property name="language" type="string">
+            <column name="language" />
+        </property>
+        <property name="rights" type="string">
+            <column name="rights" />
+        </property>
+        <property name="totalPages" type="string">
+            <column name="total_pages" length="45" />
+        </property>
+        <property name="totalFiles" type="string">
+            <column name="total_files" length="45" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="45" />
+        </property>
+        <property name="viewedTimes" type="java.lang.Integer">
+            <column name="viewed_times" />
+        </property>
+        <property name="lastViewed" type="date">
+            <column name="last_viewed" length="10" />
+        </property>
+        <property name="lastUpdated" type="timestamp">
+            <column name="last_updated" length="19" />
+        </property>
+        <property name="dateRegistered" type="timestamp">
+            <column name="date_registered" length="19" />
+        </property>
+        <property name="dateApproved" type="timestamp">
+            <column name="date_approved" length="19" />
+        </property>
+        <set name="uploadedFiles" table="uploaded_file" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="publication_id" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.UploadedFile" />
+        </set>
+        <set name="keywordPublications" table="keyword_publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pub_id" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.KeywordPublication" />
+        </set>
+        <set name="publisherPublications" table="publisher_publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pubID" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.PublisherPublication" />
+        </set>
+        <set name="agencyPublications" table="agency_publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="p_id" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.AgencyPublication" />
+        </set>
+    </class>
+</hibernate-mapping>

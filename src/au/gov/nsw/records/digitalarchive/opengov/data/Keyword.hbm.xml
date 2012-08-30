@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2012 1:21:11 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="au.gov.nsw.records.digitalarchive.opengov.data.Keyword" table="keyword" catalog="publications_nsw">
+        <id name="keywordId" type="java.lang.Integer">
+            <column name="keyword_id" />
+            <generator class="identity" />
+        </id>
+        <property name="keyword" type="string">
+            <column name="keyword" />
+        </property>
+        <set name="keywordPublications" table="keyword_publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="keyword_id" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.KeywordPublication" />
+        </set>
+    </class>
+</hibernate-mapping>

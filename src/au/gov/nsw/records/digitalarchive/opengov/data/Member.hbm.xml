@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2012 1:21:11 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="au.gov.nsw.records.digitalarchive.opengov.data.Member" table="member" catalog="publications_nsw">
+        <id name="memberId" type="java.lang.Integer">
+            <column name="member_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="fullAgencyList" class="au.gov.nsw.records.digitalarchive.opengov.data.FullAgencyList" fetch="select">
+            <column name="AgencyID" />
+        </many-to-one>
+        <property name="firstname" type="string">
+            <column name="firstname" length="150" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" length="150" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="45" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="25" />
+        </property>
+        <property name="login" type="string">
+            <column name="login" length="45" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="45" />
+        </property>
+        <property name="registrationDate" type="timestamp">
+            <column name="registration_date" length="19" />
+        </property>
+        <property name="lastLogin" type="timestamp">
+            <column name="last_login" length="19" />
+        </property>
+        <property name="loginTimes" type="java.lang.Integer">
+            <column name="login_times" />
+        </property>
+        <property name="activated" type="string">
+            <column name="activated" length="2" />
+        </property>
+        <set name="publications" table="publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="registered_by" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.Publication" />
+        </set>
+    </class>
+</hibernate-mapping>

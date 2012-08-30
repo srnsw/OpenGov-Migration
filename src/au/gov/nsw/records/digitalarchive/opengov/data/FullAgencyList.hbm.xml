@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2012 1:21:11 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="au.gov.nsw.records.digitalarchive.opengov.data.FullAgencyList" table="full_agency_list" catalog="publications_nsw">
+        <id name="fullAgencyListId" type="java.lang.Integer">
+            <column name="full_agency_list_id" />
+            <generator class="identity" />
+        </id>
+        <property name="bosId" type="java.lang.Integer">
+            <column name="bos_id" />
+        </property>
+        <property name="tempId" type="java.lang.Integer">
+            <column name="temp_id" />
+        </property>
+        <property name="agencyName" type="string">
+            <column name="agency_name" length="65535" />
+        </property>
+        <set name="publisherPublications" table="publisher_publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="publisherID" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.PublisherPublication" />
+        </set>
+        <set name="agencyPublications" table="agency_publication" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="agency_list_id" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.AgencyPublication" />
+        </set>
+        <set name="members" table="member" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="AgencyID" />
+            </key>
+            <one-to-many class="au.gov.nsw.records.digitalarchive.opengov.data.Member" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/publications_nsw</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.search.autoregister_listeners">false</property>
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/FullAgencyList.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/Archivist.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/Agency.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/Keyword.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/AgencyPublication.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/PublisherPublication.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/UploadedFile.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/TempList.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/Publication.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/BosList.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/Member.hbm.xml" />
+        <mapping resource="au/gov/nsw/records/digitalarchive/opengov/data/KeywordPublication.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

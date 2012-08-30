@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2012 1:21:11 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="au.gov.nsw.records.digitalarchive.opengov.data.UploadedFile" table="uploaded_file" catalog="publications_nsw">
+        <id name="fileId" type="java.lang.Integer">
+            <column name="file_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="publication" class="au.gov.nsw.records.digitalarchive.opengov.data.Publication" fetch="select">
+            <column name="publication_id" />
+        </many-to-one>
+        <property name="fileName" type="string">
+            <column name="file_name" />
+        </property>
+        <property name="downloadLink" type="string">
+            <column name="download_link" length="65535" />
+        </property>
+        <property name="inboxUrl" type="string">
+            <column name="inbox_url" length="150" />
+        </property>
+        <property name="pairtreeUrl" type="string">
+            <column name="pairtree_url" length="150" />
+        </property>
+        <property name="contentType" type="string">
+            <column name="content_type" length="45" />
+        </property>
+        <property name="size" type="string">
+            <column name="size" length="45" />
+        </property>
+        <property name="pages" type="string">
+            <column name="pages" length="45" />
+        </property>
+        <property name="uid" type="string">
+            <column name="UID" length="100" />
+        </property>
+        <property name="fileOrder" type="java.lang.Integer">
+            <column name="file_order" />
+        </property>
+        <property name="dateUploaded" type="timestamp">
+            <column name="date_uploaded" length="19" />
+        </property>
+        <property name="uploadedBy" type="string">
+            <column name="uploaded_by" length="45" />
+        </property>
+        <property name="ipAddress" type="string">
+            <column name="ip_address" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>
