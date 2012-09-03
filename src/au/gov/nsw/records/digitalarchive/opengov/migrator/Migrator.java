@@ -35,17 +35,20 @@ public class Migrator {
 	private Set<String> newAgencyNames = new HashSet<String>();
 	private Set<String> newKeywords = new HashSet<String>();
 	private Set<List<String>> newPublications = new HashSet<List<String>>();
-
+	
 	private Member member;
-
+	
+	private String baseDir  = "c:\\inbox\\";
+	private static String uploadUser = "cassf@records.nsw.gov.au";
+	private static String csvFile = "Open Gov Import.csv";
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 
 		Migrator mg = new Migrator();
-		mg.loadMember("cassf@records.nsw.gov.au");
-		mg.readFile("Open Gov Import.csv");
+		mg.loadMember(uploadUser);
+		mg.readFile(csvFile);
 		mg.processNewAgenciesName();
 		
 		// do not import keywords
@@ -239,9 +242,11 @@ public class Migrator {
 		for (int i=1; i<=29; i++){
 			String uid = readPublicationColumn( "uid"+i ,row);
 			if (uid!=null && !uid.isEmpty()){
+				//we need only 32 characters
+				uid = uid.substring(0, 31);
 				System.out.println("Adding file [" + uid + "] at [" + i + "]");
 				UploadedFile uf = new UploadedFile();
-				uf.setInboxUrl("c:\\inbox\\" + uid + File.separatorChar + "document.pdf");
+				uf.setInboxUrl(baseDir + uid + File.separatorChar + "document.pdf");
 				uf.setFileName("document.pdf");
 				uf.setUid(uid);
 				uf.setFileOrder(i);
@@ -258,7 +263,7 @@ public class Migrator {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();        	
 
 		Session session = sf.openSession();
-		Transaction tx = session.beginTransaction();
+		session.beginTransaction();
 
 		String hql = String.format("FROM Member M WHERE M.login = :user");
 		// retrieve from DB
@@ -302,7 +307,6 @@ public class Migrator {
 	}
 
 	public void processRow(String row){
-		//System.out.println("");
 
 		Pattern pattern = Pattern.compile("\"([^\"]*)\"|(?<=,|^)([^,]*)(?:,|$)");
 		Matcher matcher = pattern.matcher(row);
@@ -324,7 +328,6 @@ public class Migrator {
 					newKeywords.add(token);
 				}
 			}
-
 		}
 		
 		newPublications.add(rowlist);
