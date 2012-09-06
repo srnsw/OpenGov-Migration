@@ -1,7 +1,6 @@
 package au.gov.nsw.records.digitalarchive.opengov.migrator;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,9 +37,12 @@ public class Migrator {
 	
 	private Member member;
 	
-	private String baseDir  = "c:\\inbox\\";
-	private static String uploadUser = "cassf@records.nsw.gov.au";
+	private String baseDir  = "/mnt/opengovdata/inbox/";
+	private static String uploadUser = "migrator@records.nsw.gov.au";
+	//private static String uploadUser = "cassf@records.nsw.gov.au";
 	private static String csvFile = "Open Gov Import.csv";
+	private static String dlLink = "<a href=\"/DA-WEB/pub.do?method=downloadFile&id=%d\">document.pdf</a>";
+	
 	/**
 	 * @param args
 	 */
@@ -148,6 +150,7 @@ public class Migrator {
 		// retrieve from DB
 		Query q = session.createQuery(hql);
 		q.setParameter("kw", keyword);
+		
 		List<Keyword> keywordList = q.list();
 
 		if (keywordList.size() == 0){
@@ -193,7 +196,7 @@ public class Migrator {
 		p.setTotalPages(totalPages);
 		// TODO add licensing boolean flag as "TRUE" for all publications
 		
-		p.setStatus("draft");
+		p.setStatus("submitted");
 		session.persist(p);
 		
 		addAgencyToPublication(row, p, session);
@@ -231,7 +234,7 @@ public class Migrator {
 			ap.setFullAgencyList(agencyList.get(0));
 			session.persist(ap);	
 			
-			System.out.println("Adding agency to publication [" + ap.getFullAgencyList().getAgencyName() + "]");
+			System.out.println("Adding agency [" + ap.getFullAgencyList().getAgencyName() + "] to publication");
 		}else{
 			// ERROR
 			System.err.println("Agency not found:" + agency);
@@ -243,20 +246,23 @@ public class Migrator {
 			String uid = readPublicationColumn( "uid"+i ,row);
 			if (uid!=null && !uid.isEmpty()){
 				//we need only 32 characters
-				uid = uid.substring(0, 31);
+				uid = uid.substring(0, 32);
 				System.out.println("Adding file [" + uid + "] at [" + i + "]");
 				UploadedFile uf = new UploadedFile();
-				uf.setInboxUrl(baseDir + uid + File.separatorChar + "document.pdf");
+				uf.setInboxUrl(baseDir + uid + "/" + "document.pdf");
 				uf.setFileName("document.pdf");
 				uf.setUid(uid);
 				uf.setFileOrder(i);
-				uf.setContentType(readPublicationColumn( "ns1:type" ,row));
+				uf.setContentType(readPublicationColumn( "ns1:mimetype" ,row));
 				uf.setPublication(p);
 				uf.setDateUploaded(new Date());
 				session.persist(uf);
+				uf.setDownloadLink(String.format(dlLink,uf.getFileId()));
+				session.merge(uf);
 			}
 		}
 	}
+	
 	
 	private Member fetchMember(String user){
 
