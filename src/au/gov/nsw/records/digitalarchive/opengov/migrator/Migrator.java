@@ -1,7 +1,9 @@
 package au.gov.nsw.records.digitalarchive.opengov.migrator;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +44,9 @@ public class Migrator {
 	//private static String uploadUser = "cassf@records.nsw.gov.au";
 	private static String csvFile = "Open Gov Import.csv";
 	private static String dlLink = "<a href=\"/DA-WEB/pub.do?method=downloadFile&id=%d\">document.pdf</a>";
+	private static String dlLinkAdmin = "<a href=\"/DAWEB-ADMIN/pub.do?method=downloadFile&id=%d\">document.pdf</a>";
 	
+	private List<String> idMapping = new ArrayList<String>();
 	/**
 	 * @param args
 	 */
@@ -57,9 +61,22 @@ public class Migrator {
 		//mg.processNewKeywordsName();
 		
 		mg.processPublications();
+		mg.createMappingFile();
 
 	}
 
+	private void createMappingFile(){
+		try {
+			FileWriter fstream = new FileWriter("mapping.txt");
+			BufferedWriter out = new BufferedWriter(fstream);
+			for(String line:idMapping){
+				out.write(line + "\n");
+			}
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	public void processNewAgenciesName(){
 		System.out.println("Importing Agencies..");
 		System.out.println("New Agencies:" + Arrays.toString(newAgencyNames.toArray()));
@@ -180,6 +197,7 @@ public class Migrator {
 		String language = readPublicationColumn( "ns1:language" ,row); 
 		String rights = readPublicationColumn( "ns1:rights" ,row);
 		String totalPages = readPublicationColumn( "ns1:pages" ,row);
+		String originalId = readPublicationColumn( "id" ,row);
 		
 		System.out.println("Adding " + Arrays.toString(row.toArray()) + " publication" );
 		
@@ -194,13 +212,21 @@ public class Migrator {
 		p.setLanguage(language);
 		p.setMember(member);
 		p.setTotalPages(totalPages);
+		p.setLastUpdated(new Date());
+		
 		// TODO add licensing boolean flag as "TRUE" for all publications
 		
 		p.setStatus("submitted");
 		session.persist(p);
 		
 		addAgencyToPublication(row, p, session);
-		addFileToPublicaion(row, p, session);
+		int fileCount = addFileToPublicaion(row, p, session);
+		
+		p.setTotalFiles(String.valueOf(fileCount));
+		session.persist(p);
+		
+		// Mapping
+		idMapping.add(originalId + " " + p.getPublicationId());  
 	}
 
 	private void addAgencyToPublication(List<String> row, Publication p, Session session){
@@ -240,8 +266,8 @@ public class Migrator {
 			System.err.println("Agency not found:" + agency);
 		}
 	}
-	private void addFileToPublicaion(List<String> row, Publication p, Session session){
-		
+	private int addFileToPublicaion(List<String> row, Publication p, Session session){
+		int filecount = 0;
 		for (int i=1; i<=29; i++){
 			String uid = readPublicationColumn( "uid"+i ,row);
 			if (uid!=null && !uid.isEmpty()){
@@ -259,8 +285,10 @@ public class Migrator {
 				session.persist(uf);
 				uf.setDownloadLink(String.format(dlLink,uf.getFileId()));
 				session.merge(uf);
+				filecount++;
 			}
 		}
+		return filecount;
 	}
 	
 	
